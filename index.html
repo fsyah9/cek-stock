@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>  
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,12 +16,12 @@
         }
         label, input, select {
             width: 100%;
-            padding: 8px; /* Lebih kecil dari sebelumnya */
+            padding: 8px;
             margin: 5px 0;
             box-sizing: border-box;
         }
         .form-group {
-            margin-bottom: 12px; /* Lebih rapat */
+            margin-bottom: 12px;
         }
         button {
             padding: 10px;
@@ -45,15 +45,25 @@
         th, td {
             padding: 10px;
             text-align: left;
+            font-size: 12px; /* Ukuran font lebih kecil */
+        }
+        #searchInput {
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 8px;
         }
         /* Responsive Design */
         @media (max-width: 600px) {
             .container {
-                padding: 5px; /* Mengurangi padding untuk mobile */
+                padding: 5px;
             }
             label, input, select, button {
-                padding: 6px; /* Mengurangi padding elemen form */
-                margin: 3px 0; /* Mengurangi margin antar elemen */
+                padding: 6px;
+                margin: 3px 0;
+            }
+            th, td {
+                padding: 5px; /* Mengurangi padding untuk tampilan mobile */
+                font-size: 10px; /* Ukuran font lebih kecil untuk mobile */
             }
         }
     </style>

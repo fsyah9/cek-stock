@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,11 +16,12 @@
         }
         label, input, select {
             width: 100%;
-            padding: 10px;
+            padding: 8px; /* Lebih kecil dari sebelumnya */
             margin: 5px 0;
+            box-sizing: border-box;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px; /* Lebih rapat */
         }
         button {
             padding: 10px;
@@ -36,7 +37,11 @@
         /* Responsive Design */
         @media (max-width: 600px) {
             .container {
-                padding: 10px;
+                padding: 5px; /* Mengurangi padding untuk mobile */
+            }
+            label, input, select, button {
+                padding: 6px; /* Mengurangi padding elemen form */
+                margin: 3px 0; /* Mengurangi margin antar elemen */
             }
         }
     </style>

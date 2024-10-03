@@ -34,6 +34,18 @@
         button:hover {
             background-color: #45a049;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
         /* Responsive Design */
         @media (max-width: 600px) {
             .container {
@@ -49,7 +61,7 @@
 <body>
 
 <div class="container">
-    <h2>CEK STOCK DAN HARGA</h2>
+    <h2>Upload Data with Image to Google Sheets</h2>
     <form id="dataForm">
         <div class="form-group">
             <label for="date">Date:</label>
@@ -92,9 +104,31 @@
     </form>
 
     <div id="statusMessage"></div>
+
+    <!-- Tabel Data -->
+    <h3>Data yang Telah Dimasukkan</h3>
+    <input type="text" id="searchInput" onkeyup="searchData()" placeholder="Cari berdasarkan nama item">
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>PIC</th>
+                <th>Status</th>
+                <th>Item Name</th>
+                <th>Brand</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data yang dimasukkan akan ditampilkan di sini -->
+        </tbody>
+    </table>
 </div>
 
 <script>
+    // Set tanggal otomatis
+    document.getElementById('date').valueAsDate = new Date();
+
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxj5vkKZKpoMJ8cmMxWORGOl6JyuDOWTPY_qJnh8Vrena9lZx65QTOpUs31D42oA9V2Rw/exec';
     const form = document.forms['dataForm'];
 
@@ -118,6 +152,9 @@
                 .then(response => {
                     if (response.ok) {
                         document.getElementById('statusMessage').innerHTML = 'Data successfully submitted!';
+                        addDataToTable(); // Tambahkan data ke tabel
+                        form.reset(); // Kosongkan form setelah submit
+                        document.getElementById('date').valueAsDate = new Date(); // Reset tanggal ke hari ini
                     } else {
                         throw new Error('Error submitting data.');
                     }
@@ -129,6 +166,35 @@
             document.getElementById('statusMessage').innerHTML = 'Error reading file: ' + error;
         };
     });
+
+    // Tambah data ke tabel setelah submit
+    function addDataToTable() {
+        const table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow();
+        
+        newRow.insertCell(0).innerHTML = document.getElementById('date').value;
+        newRow.insertCell(1).innerHTML = document.getElementById('pic').value;
+        newRow.insertCell(2).innerHTML = document.getElementById('status').value;
+        newRow.insertCell(3).innerHTML = document.getElementById('itemName').value;
+        newRow.insertCell(4).innerHTML = document.getElementById('brand').value;
+        newRow.insertCell(5).innerHTML = document.getElementById('qty').value;
+    }
+
+    // Fungsi pencarian data
+    function searchData() {
+        const input = document.getElementById('searchInput');
+        const filter = input.value.toUpperCase();
+        const table = document.getElementById('dataTable');
+        const tr = table.getElementsByTagName('tr');
+        
+        for (let i = 1; i < tr.length; i++) {
+            const td = tr[i].getElementsByTagName('td')[3]; // Kolom ke-4 (Item Name)
+            if (td) {
+                const txtValue = td.textContent || td.innerText;
+                tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? '' : 'none';
+            }
+        }
+    }
 </script>
 
 </body>

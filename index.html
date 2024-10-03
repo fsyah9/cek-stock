@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Data to Google Sheets</title>
+    <title>Upload Data with Image to Google Sheets</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,7 +44,7 @@
 <body>
 
 <div class="container">
-    <h2>Upload Data to Google Sheets</h2>
+    <h2>Upload Data with Image to Google Sheets</h2>
     <form id="dataForm">
         <div class="form-group">
             <label for="date">Date:</label>
@@ -79,6 +79,10 @@
             <label for="qty">Quantity:</label>
             <input type="number" id="qty" name="qty" placeholder="Enter Quantity" required>
         </div>
+        <div class="form-group">
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+        </div>
         <button type="submit">Submit</button>
     </form>
 
@@ -86,29 +90,39 @@
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/library/d/1MTaUPHHPAAM29ZPvAqKSwOodl4r0wrX8XAhYDx6RgRl498h-UGAxTtaz/2'; // Ganti dengan URL script Google Apps Anda
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxUYIdBPU-yh5_T655rEc9tJVp6RLKOOiEeDf-3r3fSDuxMbn-rh6CcYdfV3GT5Ik_6Tg/exec';
     const form = document.forms['dataForm'];
-
-    // Set the current date automatically
-    document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
     form.addEventListener('submit', e => {
         e.preventDefault();
         
-        // Post data to Google Sheets
-        const formData = new FormData(form);
+        // Image file handling
+        const fileInput = document.getElementById('image');
+        const file = fileInput.files[0];
+        const reader = new FileReader();
         
-        fetch(scriptURL, { method: 'POST', body: formData })
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('statusMessage').innerHTML = 'Data successfully submitted!';
-                } else {
-                    throw new Error('Network response was not ok.');
-                }
-            })
-            .catch(error => {
-                document.getElementById('statusMessage').innerHTML = 'Error submitting data: ' + error.message;
-            });
+        reader.readAsDataURL(file); // Read file as DataURL (Base64)
+        
+        reader.onload = function () {
+            const base64String = reader.result.split(',')[1]; // Get Base64 part
+            const formData = new FormData(form);
+            formData.append('image', base64String); // Attach the base64 image to the form
+            
+            // Post data to Google Sheets
+            fetch(scriptURL, { method: 'POST', body: formData })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('statusMessage').innerHTML = 'Data successfully submitted!';
+                    } else {
+                        throw new Error('Error submitting data.');
+                    }
+                })
+                .catch(error => document.getElementById('statusMessage').innerHTML = 'Error submitting data: ' + error);
+        };
+        
+        reader.onerror = function (error) {
+            document.getElementById('statusMessage').innerHTML = 'Error reading file: ' + error;
+        };
     });
 </script>
 

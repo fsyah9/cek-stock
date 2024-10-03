@@ -61,7 +61,7 @@
 <body>
 
 <div class="container">
-    <h2>Upload Data with Image to Google Sheets</h2>
+    <h2>CEK STOCK DAN HARGA</h2>
     <form id="dataForm">
         <div class="form-group">
             <label for="date">Date:</label>
@@ -107,8 +107,7 @@
 
     <!-- Tabel Data -->
     <h3>Data yang Telah Dimasukkan</h3>
-    <input type="text" id="searchInput" placeholder="Cari berdasarkan nama item">
-    <button id="searchButton" onclick="searchData()">Cari</button>
+    <input type="text" id="searchInput" onkeyup="searchData()" placeholder="Cari berdasarkan nama item">
     <table id="dataTable">
         <thead>
             <tr>
@@ -168,28 +167,18 @@
         };
     });
 
-    // Fungsi untuk memuat data dari Google Sheets
-    function loadDataFromGoogleSheets() {
-        fetch(scriptURL + '?action=read')
-            .then(response => response.json())
-            .then(data => {
-                const table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-                table.innerHTML = ''; // Kosongkan tabel sebelum memuat ulang
-
-                data.forEach(row => {
-                    const newRow = table.insertRow();
-                    newRow.insertCell(0).innerHTML = row.date;
-                    newRow.insertCell(1).innerHTML = row.pic;
-                    newRow.insertCell(2).innerHTML = row.status;
-                    newRow.insertCell(3).innerHTML = row.itemName;
-                    newRow.insertCell(4).innerHTML = row.brand;
-                    newRow.insertCell(5).innerHTML = row.qty;
-                });
-            });
+    // Tambah data ke tabel setelah submit
+    function addDataToTable() {
+        const table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow();
+        
+        newRow.insertCell(0).innerHTML = document.getElementById('date').value;
+        newRow.insertCell(1).innerHTML = document.getElementById('pic').value;
+        newRow.insertCell(2).innerHTML = document.getElementById('status').value;
+        newRow.insertCell(3).innerHTML = document.getElementById('itemName').value;
+        newRow.insertCell(4).innerHTML = document.getElementById('brand').value;
+        newRow.insertCell(5).innerHTML = document.getElementById('qty').value;
     }
-
-    // Memuat data saat halaman pertama kali dibuka
-    window.onload = loadDataFromGoogleSheets;
 
     // Fungsi pencarian data
     function searchData() {
@@ -206,14 +195,6 @@
             }
         }
     }
-
-    // Pencarian dengan tombol Enter
-    document.getElementById('searchInput').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            searchData();
-        }
-    });
 </script>
 
 </body>
